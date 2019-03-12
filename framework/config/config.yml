@@ -1,7 +1,9 @@
-local_url: http://www.baidu.com/
+﻿local_url: https://passport.jd.com/new/login.aspx
 api_url: http://www.baidu.com/
 browser: chrome
 num: 800
+account: 18816531992
+password: zq921210
 log:
     file_name: test.log      # 输出日志文件名
     backup: 5                # 备份名
