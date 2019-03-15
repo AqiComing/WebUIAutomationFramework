@@ -1,4 +1,5 @@
 import unittest
+from time import sleep
 
 from test.page.baidu_main_page import BaiDuMainPage
 from test.page.login_page import JDLoginPage
@@ -17,6 +18,7 @@ class TestLogin(unittest.TestCase):
         self.page = JDLoginPage().get(self.URL, maximize_window=False)
         self.page.login(self.Account, self.Psw)
         self.page.sliding_vaildation()
+        sleep(3)
 
 if __name__ == '__main__':
         unittest.main()
