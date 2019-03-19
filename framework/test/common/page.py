@@ -1,5 +1,10 @@
 import time
+
+from pip._internal.utils import logging
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
+
 from test.common.browser import Browser
 from utils.log import logger
 
@@ -43,12 +48,28 @@ class Page(Browser):
         ActionChains(self.driver).move_to_element(element).perform()
 
     # 寻找指定元素
-    def find_element(self, *args):
-        return self.driver.find_element(*args)
+    def find_element(self,*args,message=''):
+        try:
+            WebDriverWait(self.driver, 10).until(lambda driver: driver.find_element(*args).is_displayed())
+            return self.driver.find_element(*args)
+        except NoSuchElementException:
+            logging.error(message)
+            raise
+        except TimeoutException:
+            logging.error(message)
+            raise
 
     # 寻找指定的一批元素
-    def find_elements(self, *args):
-        return self.driver.find_elements(*args)
+    def find_elements(self, *args, message=''):
+        try:
+            WebDriverWait(self.driver, 10).until(lambda driver: driver.find_element(*args).is_displayed())
+            return self.driver.find_elements(*args)
+        except NoSuchElementException:
+            logging.error(message)
+            raise
+        except TimeoutException:
+            logging.error(message)
+            raise
 
     # 切换窗口
     def switch_to_window(self, partial_url='', partial_title=''):

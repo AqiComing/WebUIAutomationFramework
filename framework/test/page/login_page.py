@@ -12,6 +12,8 @@ from selenium.webdriver.common.by import By
 from test.common.page import Page
 import cv2
 
+from utils.config import VERIFY_IMAGE
+
 
 class JDLoginPage(Page):
     loc_account_login_button = (By.CSS_SELECTOR, 'div.login-tab-r')
@@ -59,7 +61,6 @@ class JDLoginPage(Page):
 
         block = cv2.imread(slider_block, 0)
         template = cv2.imread(back_groung, 0)
-        w,h=block.shape[::-1]
 
         cv2.imwrite('block.jpg', block)
         cv2.imwrite('template.jpg', template)
@@ -122,3 +123,7 @@ class JDLoginPage(Page):
             forward_tracks.append(int(i))
         b = sum(forward_tracks)
         return forward_tracks
+
+    def is_slider_validation(self):
+        sleep(2)
+        return self.title=='京东-欢迎登录'
