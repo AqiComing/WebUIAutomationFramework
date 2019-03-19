@@ -1,4 +1,5 @@
 import unittest
+from time import sleep
 
 from test.page.baidu_main_page import BaiDuMainPage
 from test.page.login_page import JDLoginPage
@@ -11,7 +12,7 @@ class TestLogin(unittest.TestCase):
 
     def sub_setUp(self):
         # 初始页面是main page，传入浏览器类型打开浏览器
-        self.page = JDLoginPage().get(self.URL, maximize_window=False)
+        self.main_page = JDLoginPage(self.page)
 
     def test_login(self):
         self.page = JDLoginPage().get(self.URL, maximize_window=False)

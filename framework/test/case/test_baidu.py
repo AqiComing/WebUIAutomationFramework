@@ -1,27 +1,29 @@
-import os
 import time
-import unittest  # 单元测试模块
-from selenium import webdriver  # 引入浏览器驱动
-from selenium.webdriver.common.by import By  # 引入xpath查找模块
-from utils.config import Config, DRIVER_PATH, DATA_PATH, REPORT_PATH  # 引入配置
+from test.page.jd_main_page import JDMainPage
+from test.test_base import TestBase
+from utils.config import Config
 from utils.log import logger  # 引入日志模块
 from utils.file_reader import ExcelReader  # 引入xls读取模块
-from utils.HTMLTestRunner import HTMLTestRunner
-from utils.mail import Email
 from test.page.baidu_result_page import BaiDuMainPage, BaiDuResultPage
 
-class TestBaiDu(unittest.TestCase):
-    URL = Config().get('api_url')
-    excel = DATA_PATH + '/baidu.xlsx'
+class TestBaiDu(TestBase):
+    main_page=None
+    Goods_Name=Config().get('goods')
 
-    def sub_setUp(self):
-        # 初始页面是main page，传入浏览器类型打开浏览器
-        self.page = BaiDuMainPage().get(self.URL, maximize_window=False)
+    def setUp(self):
+        self.main_page = JDMainPage(TestBase.portal)
 
-    def sub_tearDown(self):
-        self.page.save_screen_shot()
-        self.page.quit()  # 清理退出
-        #print("Done")
+    def tearDown(self):
+        self.main_page.save_screen_shot()
+        self.main_page.quit()  # 清理退出
+
+    def test_openJD(self):
+        # 1.verify main page title
+        self.assertIn('京东(JD.COM)',self.main_page.title,'Main page title is incorrect')
+        # 2.Search goods
+        self.main_page.search(self.Goods_Name)
+        self.main_page.switch_to_window()
+
 
     def test_search(self):
         datas = ExcelReader(self.excel).data
@@ -29,7 +31,6 @@ class TestBaiDu(unittest.TestCase):
             with self.subTest(data=d):
                 self.sub_setUp()
                 self.page.search(d['search'])
-                #self.page.search("test")
                 time.sleep(2)
                 self.page = BaiDuResultPage(self.page)  # 页面跳转到result page
                 links = self.page.result_links
